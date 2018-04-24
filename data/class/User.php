@@ -87,10 +87,10 @@
        }
     } 
    
-   //Check login data
+   //Check admin login data
    public static function checkLogin($email,$password){
        $connect = new Connect();
-       $query = $connect->prepare('SELECT id_client FROM ' . self::Table . ' WHERE email = :email AND password = :password');
+       $query = $connect->prepare('SELECT id_client FROM ' . self::Table . ' WHERE email = :email AND password = :password WHERE role = 99');
        $query->bindParam(':email', $email);
        $query->bindParam(':password', $password);
        $query->execute();
