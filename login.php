@@ -1,3 +1,31 @@
+<?php
+//Check for session
+session_start();
+if(isset($_SESSION['auth'])){
+   header('Location: index.php');
+}
+
+//Required classes
+require_once 'data/class/User.php';
+  
+$msg = '';
+
+//Check login form inputs
+if (isset($_POST['login']) && !empty($_POST['email']) 
+   && !empty($_POST['password'])) {
+  
+   $acces = User::checkLogin($_POST['email'],md5($_POST['password']));
+  
+   if ($acces) {
+      $_SESSION['auth'] = $acces;
+      $msg = 'You have entered valid use name and password';
+      header('Location: index.php');
+   }else {
+      $msg =  'Wrong username or password' . $acces;
+   }
+}
+?>
+<!--Html content-->
 <!DOCTYPE html>
   <html>
     <head>
@@ -56,23 +84,24 @@
           <form action="login.php" method="post">
           <div class="row">
             <div class="input-field col s10 offset-s1">
-              <input id="email" type="email" class="validate" required>
+              <input id="email" name="email" type="email" class="validate" required>
               <label for="email">Email</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s10 offset-s1">
-              <input id="password" type="password" class="validate" required>
+              <input id="password" name="password" type="password" class="validate" required>
               <label for="password">Contraseña</label>
             </div>
           </div>
           <div>
-            <button class="btn waves-effect waves-light col s10 offset-s1" type="submit" name="action">Acceder
+            <button class="btn waves-effect waves-light col s10 offset-s1" type="submit" name="login" value="login">Acceder
             </button>
           </div>
           </form>
            </br></br>
           <p class="center-align" style="color: #7a7a7a;">Ingresa tu usuario y contraseña.</p>
+          <p class="center-align" style="color: #7a7a7a;">* <?php echo $msg; ?> *</p>                  
         </div>
       </div>
     </div>
